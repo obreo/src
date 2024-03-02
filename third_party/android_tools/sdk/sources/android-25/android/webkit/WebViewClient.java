@@ -41,9 +41,23 @@ public class WebViewClient {
      * @deprecated Use {@link #shouldOverrideUrlLoading(WebView, WebResourceRequest)
      *             shouldOverrideUrlLoading(WebView, WebResourceRequest)} instead.
      */
-    @Deprecated
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        return false;
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+        String url = request.getUrl().toString();
+        // Check if the URL corresponds to an image or video
+        if (isImageOrVideo(url)) {
+            // Block loading of images and videos
+            return new WebResourceResponse("text/plain", "UTF-8", null);
+        }
+        // Allow other URLs to be loaded
+        return null;
+    }
+
+    private boolean isImageOrVideo(String url) {
+        // Implement your logic to determine if the URL is an image or video
+        // For example, check file extensions or other criteria
+        // Return true if it's an image or video, otherwise return false
+        return url.endsWith(".jpg") || url.endsWith(".png") || url.endsWith(".gif") || url.endsWith(".mp4") || url.endsWith(".m3u") || url.endsWith(".apk");
     }
 
     /**
